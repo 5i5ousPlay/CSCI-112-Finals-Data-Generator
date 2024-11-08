@@ -1,0 +1,7 @@
+{
+  "hostname": "your_ec2_public_ipv4_address",
+  "port": 27017,
+  "database": "your_database_name",
+  "n_applications": 50,
+  "credit_transaction_size": 300
+}
