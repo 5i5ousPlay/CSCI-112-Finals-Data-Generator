@@ -1,5 +1,5 @@
 from generators import DataGenerator
 
 if __name__ == '__main__':
-    dg = DataGenerator(3, 100)
+    dg = DataGenerator(50, 300)
     dg.start()
