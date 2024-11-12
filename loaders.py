@@ -18,20 +18,6 @@ class DataLoader:
         self.database = database
         self.data = data
         self.encryption_key_path = encryption_key_path
-        
-    def validate_data(self, needed_fields: list[dict]):
-        doc_str=['full_name','first_name','last_name', "middle_name", "valid_id_type",
-                 "current_add", "permanent_add", ]
-        
-        if not isinstance(needed_fields, list):
-            return "Invalid format: Expected a list"
-        
-        for item in needed_fields:
-            for key, value in item.items():
-                if key in doc_str:
-                    if not isinstance(value, str):
-                        return f"Invalid format: Field '{key}' should be a string but found {type(value).__name__}"
-        
 
     def _connect(self):
         try:
@@ -58,6 +44,7 @@ class DataLoader:
             if not isinstance(item, dict):
                 return "Invalid format: Each item should be a dictionary"
             
+            #checks each key value
             for key, value in item.items():
                 if key in doc_str:
                     if not isinstance(value, str):
