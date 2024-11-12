@@ -41,6 +41,31 @@ class DataLoader:
         except Exception as e:
             print("Failed to connect:", e)
             raise e
+        
+    def validate_data(self, needed_fields: list[dict]):
+        doc_str = [
+            "_id", "app_status",  "birth_date", "company_working",
+            "current_add", "date_submitted", "email", "employment_status", "first_name",
+            "full_name", "income_source", "job_title", "last_name", "middle_name",
+            "mode", "notes", "payslip", "permanent_add", "phone_number", "self_picture",
+            "tel_number", "updated", "user_profile", "valid_id_number", "valid_id_type"
+        ]
+        
+        if not isinstance(needed_fields, list):
+            return "Invalid format: Expected a list"
+        
+        for item in needed_fields: 
+            if not isinstance(item, dict):
+                return "Invalid format: Each item should be a dictionary"
+            
+            for key, value in item.items():
+                if key in doc_str:
+                    if not isinstance(value, str):
+                        return f"Invalid format: Field '{key}' should be a string but found {type(value).__name__}"
+                    if not value.strip():  
+                        return f"Invalid format: Field '{key}' should not be empty"
+        
+        return "Validation successful"
 
     def _encrypt(self, collection_data: list[dict]):
         em = EncryptionKeyManager(self.encryption_key_path)
