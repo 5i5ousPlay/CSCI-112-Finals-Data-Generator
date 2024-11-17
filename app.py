@@ -2,7 +2,7 @@ import json
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from managers import EncryptionKeyManager
-from helpers import CollectionGetter
+from helpers import CollectionGetter, CollectionPoster
 
 
 app = Flask(__name__)
@@ -24,7 +24,7 @@ db = client[database]
 em = EncryptionKeyManager('encryption_key.key')
 
 
-@app.route("/get_application/<string:item_id>/", methods=["GET"])
+@app.route("/retrieve/application/<string:item_id>/", methods=["GET"])
 def get_application(item_id: str):
     application_getter = CollectionGetter(client=client, database=database, collection='applications',
                                           encryption_manager=em, is_encrypted=True)
@@ -32,9 +32,26 @@ def get_application(item_id: str):
     return item
 
 
-@app.route("/get_user_profile/<string:item_id>/", methods=["GET"])
+@app.route('/create/application/', methods=['POST'])
+def create_application():
+    cp = CollectionPoster(client=client, database=database, collection='applications', encryption_manager=em,
+                     is_encrypted=True)
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "Invalid input"}), 400
+        result = cp.handle_item(item=data)
+        return result
+    except Exception as e:
+        return jsonify({"error": "Failed to post item", "details": str(e)}), 500
+
+
+@app.route("/retrieve/user_profile/<string:item_id>/", methods=["GET"])
 def get_user_profile(item_id: str):
     profile_getter = CollectionGetter(client=client, database=database, collection='user_profiles',
                                       encryption_manager=em, is_encrypted=True)
     item = profile_getter.handle_item(item_id=item_id)
     return item
+
+
+
