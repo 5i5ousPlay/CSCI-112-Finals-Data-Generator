@@ -28,7 +28,7 @@ em = EncryptionKeyManager('encryption_key.key')
 def get_application(item_id: str):
     application_getter = CollectionGetter(client=client, database=database, collection='applications',
                                           encryption_manager=em, is_encrypted=True)
-    item = application_getter.get_item(item_id=item_id)
+    item = application_getter.handle_item(item_id=item_id)
     return item
 
 
@@ -36,5 +36,5 @@ def get_application(item_id: str):
 def get_user_profile(item_id: str):
     profile_getter = CollectionGetter(client=client, database=database, collection='user_profiles',
                                       encryption_manager=em, is_encrypted=True)
-    item = profile_getter.get_item(item_id=item_id)
+    item = profile_getter.handle_item(item_id=item_id)
     return item
