@@ -36,3 +36,20 @@ class CollectionGetter:
             return self._decrypt_item(item)
         else:
             return item
+
+
+class CollectionDeleter:
+    client = None
+    collection = None
+    database = None
+
+    def __init__(self, client: MongoClient, database, collection: str):
+        self.client = client
+        self.database = self.client[database]
+        self.collection = self.database[collection]
+
+    def delete_item(self, item_id: str):
+        try:
+            self.collection.delete_one({"_id": item_id})
+        except Exception as e:
+            return jsonify({"error": "Deletion failed", "details": str(e)}), 500
