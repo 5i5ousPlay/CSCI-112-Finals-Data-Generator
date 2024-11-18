@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from managers import EncryptionKeyManager
 from helpers import CollectionGetter
+from dataValidation import dataValidator
 
 
 app = Flask(__name__)
@@ -26,10 +27,15 @@ em = EncryptionKeyManager('encryption_key.key')
 
 @app.route("/get_application/<string:item_id>/", methods=["GET"])
 def get_application(item_id: str):
-    application_getter = CollectionGetter(client=client, database=database, collection='applications',
-                                          encryption_manager=em, is_encrypted=True)
-    item = application_getter.get_item(item_id=item_id)
-    return item
+    try:
+        application_getter = CollectionGetter(client=client, database=database, collection='applications',
+                                            encryption_manager=em, is_encrypted=True)
+        item = application_getter.get_item(item_id=item_id)
+        dataValidator.validate_application(item)
+        return item
+    except:
+        return jsonify({"error": "Internal server error"})
+        
 
 
 @app.route("/get_user_profile/<string:item_id>/", methods=["GET"])
