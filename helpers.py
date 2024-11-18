@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from flask import jsonify
 from pymongo import MongoClient
 from managers import EncryptionKeyManager
+from validation import dataValidator
 
 
 class CollectionHandler(ABC):
@@ -51,8 +52,14 @@ class CollectionHandler(ABC):
 
 
 class CollectionPoster(CollectionHandler):
-    def _validate(self, data):
+    def _validate(self, data, schema_name):
         # TODO: Implement data validation for POST operations
+        validator= dataValidator()
+        try:
+            validator.validate_data(data,schema_name)
+        except:
+            raise ValueError("Validation Error")
+        
         validated_data = data
         return validated_data
 
@@ -80,8 +87,14 @@ class CollectionGetter(CollectionHandler):
 
 
 class CollectionUpdater(CollectionHandler):
-    def _validate(self, data):
+    def _validate(self, data, schema_name):
         # TODO: Implement data validation for UPDATE operations
+        validator= dataValidator()
+        try:
+            validator.validate_data(data,schema_name)
+        except:
+            raise ValueError("Validation Error")
+        
         validated_data = data
         return validated_data
 
