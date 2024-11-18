@@ -65,9 +65,9 @@ class CollectionPoster(CollectionHandler):
             validated_data = encrypted_item
 
         validated_data['_id'] = str(uuid.uuid4())
-        item['_id'] = str(validated_data['_id'])
         result = self.collection.insert_one(validated_data)
-        return jsonify({"status": result.acknowledged, "item": item}), 201
+        db_item = self.collection.find_one(validated_data['_id'])
+        return jsonify({"success": result.acknowledged, "item": self._decrypt_item(db_item)}), 201
 
 
 class CollectionGetter(CollectionHandler):
@@ -79,10 +79,31 @@ class CollectionGetter(CollectionHandler):
             return item
 
 
+class CollectionUpdater(CollectionHandler):
+    def _validate(self, data):
+        # TODO: Implement data validation for UPDATE operations
+        validated_data = data
+        return validated_data
+
+    def handle_item(self, item_id:str, data: dict):
+        validated_data = self._validate(data=data)
+        if self.is_encrypted:
+            encrypted_data = {}
+            for key, value in validated_data.items():
+                encrypted_data[key] = self.encryption_manager.encrypt(value)
+            result = self.collection.update_one({"_id": item_id}, {"$set": encrypted_data})
+            item = self.collection.find_one({"_id": item_id})
+            return jsonify({"success": result.acknowledged, "item": self._decrypt_item(item)}), 200
+        else:
+            result = self.collection.update_one({"_id": item_id}, {"$set": validated_data})
+            item = self.collection.find_one({"_id": item_id})
+            return jsonify({"success": result.acknowledged, "item": item}), 200
+
+
 class CollectionDeleter(CollectionHandler):
     def handle_item(self, item_id: str):
         try:
             self.collection.delete_one({"_id": item_id})
-            return jsonify({"success": f"Deleted {item_id} from {self.collection.name}"})
+            return jsonify({"success": f"Deleted {item_id} from {self.collection.name}"}), 204
         except Exception as e:
             return jsonify({"error": "Deletion failed", "details": str(e)}), 500
