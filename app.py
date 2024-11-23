@@ -40,7 +40,7 @@ def create_application():
         data = request.json
         if not data:
             return jsonify({"error": "Invalid input"}), 400
-        result = cp.handle_item(item=data)
+        result = cp.handle_item(item=data, schema_name='applications')
         return result
     except Exception as e:
         return jsonify({"error": "Failed to post item", "details": str(e)}), 500
@@ -54,7 +54,7 @@ def update_application(item_id:str):
         data = request.json
         if not data:
             return jsonify({"error": "Invalid input"}), 400
-        result = cu.handle_item(item_id=item_id, data=data)
+        result = cu.handle_item(item_id=item_id, data=data, schema_name='applications')
         return result
     except Exception as e:
         return jsonify({"error": "Failed to update item", "details": str(e)}), 500
