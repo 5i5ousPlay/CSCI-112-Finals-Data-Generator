@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from managers import EncryptionKeyManager
 from helpers import CollectionGetter, CollectionPoster, CollectionDeleter, CollectionUpdater
+from validation import DataValidator
 
 
 app = Flask(__name__)
@@ -34,8 +35,9 @@ def get_application(item_id: str):
 
 @app.route('/create/application/', methods=['POST'])
 def create_application():
-    cp = CollectionPoster(client=client, database=database, collection='applications', encryption_manager=em,
-                     is_encrypted=True)
+    validator = DataValidator('schema')
+    cp = CollectionPoster(client=client, database=database, collection='applications', data_validator=validator,
+                          encryption_manager=em, is_encrypted=True)
     try:
         data = request.json
         if not data:
@@ -48,8 +50,9 @@ def create_application():
 
 @app.route('/update/application/<string:item_id>/', methods=['PATCH'])
 def update_application(item_id:str):
-    cu = CollectionUpdater(client=client, database=database, collection='applications', encryption_manager=em,
-                           is_encrypted=True)
+    validator = DataValidator('schema')
+    cu = CollectionUpdater(client=client, database=database, collection='applications', data_validator=validator,
+                           encryption_manager=em, is_encrypted=True)
     try:
         data = request.json
         if not data:
@@ -73,6 +76,4 @@ def get_user_profile(item_id: str):
                                       encryption_manager=em, is_encrypted=True)
     item = profile_getter.handle_item(item_id=item_id)
     return item
-
-
 
