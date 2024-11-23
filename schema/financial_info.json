@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "items": {
+    "type": "object",
+    "properties": {
+      "application_id": {"type": "string"},
+      "income": {"type": "number"},
+      "net_assets": {"type": "number"},
+      "net_debt": {"type": "number"},
+      "updated": {"type": "string", "format": "date-time"}
+    },
+    "required": ["application_id", "income", "net_assets", "net_debt", "updated"]
+  }
+}

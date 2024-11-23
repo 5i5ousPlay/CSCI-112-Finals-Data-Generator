@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "items": {
+    "type": "object",
+    "properties": {
+      "user_id": {"type": "string"},
+      "credit_score": {"type": "integer"},
+      "updated": {"type": "string", "format": "date-time"}
+    },
+    "required": ["user_id", "credit_score", "updated"]
+  }
+}

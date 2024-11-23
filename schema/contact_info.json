@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "items": {
+    "type": "object",
+    "properties": {
+      "user_profile": {"type": "string"},
+      "email": {"type": "string", "format": "email"},
+      "phone_number": {"type": "string"},
+      "tel_number": {"type": "string"},
+      "updated": {"type": "string", "format": "date-time"}
+    },
+    "required": ["user_profile", "email", "phone_number", "updated"]
+  }
+}
