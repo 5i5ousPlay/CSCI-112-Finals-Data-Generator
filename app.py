@@ -207,3 +207,140 @@ def delete_banking_info(item_id: str):
     cd = CollectionDeleter(client=client, database=database, collection='banking_info')
     result = cd.handle_item(item_id=item_id)
     return result
+
+
+# ===========================CREDIT ACCOUNTS CRUD==============================
+@app.route('/create/credit_account/', methods =['POST'])
+def create_credit_account():
+    validator = DataValidator('schema')
+    cp = CollectionPoster(client=client, database=database, collection='credit_accounts', data_validator=validator,
+                          encryption_manager=em, is_encrypted=True)
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "Invalid input"}), 400
+        result = cp.handle_item(item=data)
+        return result
+    except Exception as e:
+        return jsonify({"error": "Failed to post item", "details": str(e)}), 500
+
+
+@app.route("/update/credit_account/<string:item_id>/", methods=['PATCH'])
+def update_credit_account(item_id: str):
+    validator = DataValidator('schema', update=True)
+    cu = CollectionUpdater(client=client, database=database, collection='credit_accounts', data_validator=validator,
+                           encryption_manager=em, is_encrypted=True)
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "Invalid input"}), 400
+        result = cu.handle_item(item_id=item_id, data=data)
+        return result
+    except Exception as e:
+        return jsonify({"error": "Failed to update item", "details": str(e)}), 500
+
+
+@app.route("/retrieve/credit_account/<string:item_id>/", methods=["GET"])
+def get_credit_account(item_id: str):
+    profile_getter = CollectionGetter(client=client, database=database, collection='credit_accounts',
+                                      encryption_manager=em, is_encrypted=True)
+    item = profile_getter.handle_item(item_id=item_id)
+    return item
+
+
+@app.route('/delete/credit_account/<string:item_id>/', methods=['DELETE'])
+def delete_credit_account(item_id: str):
+    cd = CollectionDeleter(client=client, database=database, collection='credit_accounts')
+    result = cd.handle_item(item_id=item_id)
+    return result
+
+
+# ===========================CREDIT TRANSACTIONS CRUD==============================
+@app.route('/create/credit_transaction/', methods =['POST'])
+def create_credit_transaction():
+    validator = DataValidator('schema')
+    cp = CollectionPoster(client=client, database=database, collection='credit_transactions', data_validator=validator,
+                          encryption_manager=em, is_encrypted=True)
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "Invalid input"}), 400
+        result = cp.handle_item(item=data)
+        return result
+    except Exception as e:
+        return jsonify({"error": "Failed to post item", "details": str(e)}), 500
+
+
+@app.route("/update/credit_transaction/<string:item_id>/", methods=['PATCH'])
+def update_credit_transaction(item_id: str):
+    validator = DataValidator('schema', update=True)
+    cu = CollectionUpdater(client=client, database=database, collection='credit_transactions', data_validator=validator,
+                           encryption_manager=em, is_encrypted=True)
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "Invalid input"}), 400
+        result = cu.handle_item(item_id=item_id, data=data)
+        return result
+    except Exception as e:
+        return jsonify({"error": "Failed to update item", "details": str(e)}), 500
+
+
+@app.route("/retrieve/credit_transaction/<string:item_id>/", methods=["GET"])
+def get_credit_transaction(item_id: str):
+    profile_getter = CollectionGetter(client=client, database=database, collection='credit_transactions',
+                                      encryption_manager=em, is_encrypted=True)
+    item = profile_getter.handle_item(item_id=item_id)
+    return item
+
+
+@app.route('/delete/credit_transaction/<string:item_id>/', methods=['DELETE'])
+def delete_credit_transaction(item_id: str):
+    cd = CollectionDeleter(client=client, database=database, collection='credit_transactions')
+    result = cd.handle_item(item_id=item_id)
+    return result
+
+# ===========================FINANCIAL INFO CRUD==============================
+@app.route('/create/financial_info/', methods =['POST'])
+def create_financial_info():
+    validator = DataValidator('schema')
+    cp = CollectionPoster(client=client, database=database, collection='financial_info', data_validator=validator,
+                          encryption_manager=em, is_encrypted=True)
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "Invalid input"}), 400
+        result = cp.handle_item(item=data)
+        return result
+    except Exception as e:
+        return jsonify({"error": "Failed to post item", "details": str(e)}), 500
+
+
+@app.route("/update/financial_info/<string:item_id>/", methods=['PATCH'])
+def update_financial_info(item_id: str):
+    validator = DataValidator('schema', update=True)
+    cu = CollectionUpdater(client=client, database=database, collection='financial_info', data_validator=validator,
+                           encryption_manager=em, is_encrypted=True)
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "Invalid input"}), 400
+        result = cu.handle_item(item_id=item_id, data=data)
+        return result
+    except Exception as e:
+        return jsonify({"error": "Failed to update item", "details": str(e)}), 500
+
+
+@app.route("/retrieve/financial_info/<string:item_id>/", methods=["GET"])
+def get_financial_info(item_id: str):
+    profile_getter = CollectionGetter(client=client, database=database, collection='financial_info',
+                                      encryption_manager=em, is_encrypted=True)
+    item = profile_getter.handle_item(item_id=item_id)
+    return item
+
+
+@app.route('/delete/financial_info/<string:item_id>/', methods=['DELETE'])
+def delete_financial_info(item_id: str):
+    cd = CollectionDeleter(client=client, database=database, collection='financial_info')
+    result = cd.handle_item(item_id=item_id)
+    return result
