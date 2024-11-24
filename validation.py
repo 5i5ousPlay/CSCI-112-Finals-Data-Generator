@@ -1,162 +1,65 @@
 from jsonschema import validate, ValidationError
 import json
+import os
 
-class dataValidator:
-  schema=  {
-    "type": "object",
-    "properties": {
-        "user_profiles": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "_id": {"type": "number"},
-                    "full_name": {"type": "string"},
-                    "first_name": {"type": "string"},
-                    "last_name": {"type": "string"},
-                    "middle_name": {"type": "string"},
-                    "birth_date": {"type": "string", "format": "date"},
-                    "valid_id_type": {
-                        "type": "string",
-                        "enum": ["Passport", "Driver's License", "National ID"]
-                    },
-                    "valid_id_number": {"type": "string"},
-                    "self_picture": {"type": "string", "format": "uri"},
-                    "current_add": {"type": "string"},
-                    "permanent_add": {"type": "string"},
-                    "employment_status": {
-                        "type": "string",
-                        "enum": ["Employed", "Self-Employed", "Unemployed"]
-                    },
-                    "company_working": {"type": "string"},
-                    "job_title": {"type": "string"},
-                    "income_source": {
-                        "type": "string",
-                        "enum": ["Salary", "Business", "Investment", "Other"]
-                    },
-                    "payslip": {"type": "string"},
-                    "updated": {"type": "string", "format": "date-time"}
-                },
-                "required": [
-                    "_id","full_name", "birth_date","valid_id_type","valid_id_number", "current_add", "employment_status", "updated"
-                ]
-            }
-        },
-        "applications": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "_id": {"type": "string"},
-                    "user_profile": {"type": "number"},
-                    "date_submitted": {"type": "string", "format": "date-time"},
-                    "app_status": {
-                        "type": "string",
-                        "enum": ["Pending", "Approved", "Rejected"]
-                    },
-                    "mode": {
-                        "type": "string",
-                        "enum": ["Online", "In-Person"]
-                    },
-                    "notes": {"type": "string"},
-                    "apply_attempt": {"type": "integer"},
-                    "updated": {"type": "string", "format": "date-time"}
-                },
-                "required": ["_id", "user_profile", "date_submitted", "app_status", "mode", "updated"]
-            }
-        },
-        "contact_info": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "_id": {"type": "string"},
-                    "user_profile": {"type": "number"},
-                    "email": {"type": "string", "format": "email"},
-                    "phone_number": {"type": "string"},
-                    "tel_number": {"type": "string"},
-                    "updated": {"type": "string", "format": "date-time"}
-                },
-                "required": ["_id", "user_profile", "email", "phone_number", "updated"]
-            }
-        },
-        "banking_info": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "_id": {"type": "string"},
-                    "application_id": {"type": "string"},
-                    "bank_name": {"type": "string"},
-                    "account_type": {
-                        "type": "string",
-                        "enum": ["Savings", "In-Checking"]
-                    },
-                    "account_number": {"type": "number"},
-                    "bank_status": {
-                        "type": "string",
-                        "enum": ["Active", "Inactive"]
-                    },
-                },
-                "required": ["_id", "application_id", "bank_name", "account_type", "account_number", "bank_status"]
-            }
-        },
-        "financial_info": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "_id": {"type": "string"},
-                    "application_id": {"type": "string"},
-                    "income": {"type": "number"},
-                    "net_assets": {"type": "number"},
-                    "net_debt": {"type": "number"},
-                    "updated": {"type": "string", "format": "date-time"}
-                },
-                "required": ["_id", "application_id", "income", "net_assets", "net_debt", "updated"]
-            }
-        },
-        "credit_accounts": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "_id": {"type": "string"},
-                    "user_id": {"type": "number"},
-                    "credit_score": {"type": "integer"},
-                    "updated": {"type": "string", "format": "date-time"}
-                },
-                "required": ["_id", "user_id", "credit_score", "updated"]
-            }
-        },
-        "credit_transactions": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "_id": {"type": "string"},
-                    "account_id": {"type": "string"},
-                    "amount": {"type": "number"},
-                    "created": {"type": "string", "format": "date-time"},
-                    "updated": {"type": "string", "format": "date-time"}
-                },
-                "required": ["_id", "account_id", "amount", "created", "updated"]
-            }
-        }
-    },
-    "required": ["applications", "contact_info", "banking_info", "financial_info", "credit_account", "credit_transactions"]
-  }
-  
-#when you post it will go through a validation class to check if the feilds are inside 
-#required, 
-  
-  def validate_data(self, data: dict, schema_name: str) -> None:
-    schema = self.schema["properties"].get(schema_name)
-    if not schema:
-        raise ValueError(f"No schema defined for {schema_name}")
-    
-    try:
-        validate(instance=data, schema=schema)
-    except ValidationError as e:
-        raise ValueError(f"Validation failed for {schema_name}: {e.message}")
+
+class DataValidator:
+    """
+    A class for validating data against JSON schemas stored in a specified directory.
+
+    Attributes:
+        schema_directory (str): The directory path where JSON schema files are stored.
+    """
+    schema_directory = None
+    update = False
+
+    def __init__(self, schema_directory: str, update=False):
+        """
+        Initialize the DataValidator with the directory containing JSON schemas.
+
+        Args:
+            schema_directory (str): Path to the directory containing JSON schema files.
+            update(bool): Bool to ignore required fields during update operations
+        """
+        self.schema_directory = schema_directory
+        self.update = update
+
+    def _load_schema(self, collection_name: str):
+        """
+        Load a JSON schema file for the specified collection.
+
+        Args:
+            collection_name (str): The name of the collection (used to locate the schema file).
+
+        Returns:
+           dict: The loaded JSON schema.
+
+        Raises:
+           ValueError: If the schema file does not exist in the specified directory.
+        """
+        schema_path = os.path.join(self.schema_directory, f"{collection_name}.json")
+        if not os.path.exists(schema_path):
+            raise ValueError(f"Schema file for {collection_name} does not exist at {schema_path}.")
+
+        with open(schema_path, "r") as f:
+            return json.load(f)
+
+    def validate(self, data: dict, collection_name: str):
+        """
+        Validate the given data against the schema for the specified collection.
+
+        Args:
+            data (dict): The data to validate.
+            collection_name (str): The name of the collection (used to locate the schema file).
+
+        Raises:
+            ValueError: If the data does not conform to the schema or if the schema file is invalid.
+        """
+        schema = self._load_schema(collection_name=collection_name)
+        if self.update:
+            schema.pop("required")
+        try:
+            validate(instance=data, schema=schema)
+        except ValidationError as e:
+            raise ValueError(f"Validation failed for {collection_name}: {e.message}")
     
