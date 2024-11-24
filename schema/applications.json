@@ -1,19 +1,22 @@
 {
   "type": "object",
-  "properties": {
-    "user_profile": {"type": "string"},
-    "date_submitted": {"type": "string", "format": "date-time"},
-    "app_status": {
-      "type": "string",
-      "enum": ["Pending", "Approved", "Rejected"]
+  "items": {
+    "type": "object",
+    "properties": {
+      "user_profile": {"type": "string"},
+      "date_submitted": {"type": "string", "format": "date-time"},
+      "app_status": {
+        "type": "string",
+        "enum": ["Pending", "Approved", "Rejected"]
+      },
+      "mode": {
+        "type": "string",
+        "enum": ["Online", "In-Person"]
+      },
+      "notes": {"type": "string"},
+      "apply_attempt": {"type": "integer"},
+      "updated": {"type": "string", "format": "date-time"}
     },
-    "mode": {
-      "type": "string",
-      "enum": ["Online", "In-Person"]
-    },
-    "notes": {"type": "string"},
-    "apply_attempt": {"type": "integer"},
-    "updated": {"type": "string", "format": "date-time"}
-  },
-  "required": ["user_profile", "date_submitted", "app_status", "mode", "updated"]
+    "required": ["user_profile", "date_submitted", "app_status", "mode", "updated"]
+  }
 }

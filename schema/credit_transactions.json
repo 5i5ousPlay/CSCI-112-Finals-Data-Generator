@@ -1,10 +1,13 @@
 {
   "type": "object",
-  "properties": {
-    "account_id": {"type": "string"},
-    "amount": {"type": "number"},
-    "created": {"type": "string", "format": "date-time"},
-    "updated": {"type": "string", "format": "date-time"}
-  },
-  "required": ["account_id", "amount", "created", "updated"]
+  "items": {
+    "type": "object",
+    "properties": {
+      "account_id": {"type": "string"},
+      "amount": {"type": "number"},
+      "created": {"type": "string", "format": "date-time"},
+      "updated": {"type": "string", "format": "date-time"}
+    },
+    "required": ["account_id", "amount", "created", "updated"]
+  }
 }

@@ -1,33 +1,36 @@
 {
   "type": "object",
-  "properties": {
-    "full_name": {"type": "string"},
-    "first_name": {"type": "string"},
-    "last_name": {"type": "string"},
-    "middle_name": {"type": "string"},
-    "birth_date": {"type": "string", "format": "date"},
-    "valid_id_type": {
-      "type": "string",
-      "enum": ["Passport", "Driver's License", "National ID"]
+  "items": {
+    "type": "object",
+    "properties": {
+      "full_name": {"type": "string"},
+      "first_name": {"type": "string"},
+      "last_name": {"type": "string"},
+      "middle_name": {"type": "string"},
+      "birth_date": {"type": "string", "format": "date"},
+      "valid_id_type": {
+        "type": "string",
+        "enum": ["Passport", "Driver's License", "National ID"]
+      },
+      "valid_id_number": {"type": "string"},
+      "self_picture": {"type": "string", "format": "uri"},
+      "current_add": {"type": "string"},
+      "permanent_add": {"type": "string"},
+      "employment_status": {
+        "type": "string",
+        "enum": ["Employed", "Self-Employed", "Unemployed"]
+      },
+      "company_working": {"type": "string"},
+      "job_title": {"type": "string"},
+      "income_source": {
+        "type": "string",
+        "enum": ["Salary", "Business", "Investment", "Other"]
+      },
+      "payslip": {"type": "string"},
+      "updated": {"type": "string", "format": "date-time"}
     },
-    "valid_id_number": {"type": "string"},
-    "self_picture": {"type": "string", "format": "uri"},
-    "current_add": {"type": "string"},
-    "permanent_add": {"type": "string"},
-    "employment_status": {
-      "type": "string",
-      "enum": ["Employed", "Self-Employed", "Unemployed"]
-    },
-    "company_working": {"type": "string"},
-    "job_title": {"type": "string"},
-    "income_source": {
-      "type": "string",
-      "enum": ["Salary", "Business", "Investment", "Other"]
-    },
-    "payslip": {"type": "string"},
-    "updated": {"type": "string", "format": "date-time"}
-  },
-  "required": [
-    "full_name", "birth_date","valid_id_type","valid_id_number", "current_add", "employment_status", "updated"
-  ]
+    "required": [
+      "full_name", "birth_date","valid_id_type","valid_id_number", "current_add", "employment_status", "updated"
+    ]
+  }
 }
