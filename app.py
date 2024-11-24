@@ -162,3 +162,48 @@ def delete_contact_info(item_id: str):
     result = cd.handle_item(item_id=item_id)
     return result
 
+
+# ===========================CONTACT INFO CRUD==============================
+@app.route('/create/banking_info/', methods =['POST'])
+def create_banking_info():
+    validator = DataValidator('schema')
+    cp = CollectionPoster(client=client, database=database, collection='banking_info', data_validator=validator,
+                          encryption_manager=em, is_encrypted=True)
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "Invalid input"}), 400
+        result = cp.handle_item(item=data)
+        return result
+    except Exception as e:
+        return jsonify({"error": "Failed to post item", "details": str(e)}), 500
+
+
+@app.route("/update/banking_info/<string:item_id>/", methods=['PATCH'])
+def update_banking_info(item_id: str):
+    validator = DataValidator('schema', update=True)
+    cu = CollectionUpdater(client=client, database=database, collection='banking_info', data_validator=validator,
+                           encryption_manager=em, is_encrypted=True)
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "Invalid input"}), 400
+        result = cu.handle_item(item_id=item_id, data=data)
+        return result
+    except Exception as e:
+        return jsonify({"error": "Failed to update item", "details": str(e)}), 500
+
+
+@app.route("/retrieve/banking_info/<string:item_id>/", methods=["GET"])
+def get_banking_info(item_id: str):
+    profile_getter = CollectionGetter(client=client, database=database, collection='banking_info',
+                                      encryption_manager=em, is_encrypted=True)
+    item = profile_getter.handle_item(item_id=item_id)
+    return item
+
+
+@app.route('/delete/banking_info/<string:item_id>/', methods=['DELETE'])
+def delete_banking_info(item_id: str):
+    cd = CollectionDeleter(client=client, database=database, collection='banking_info')
+    result = cd.handle_item(item_id=item_id)
+    return result
