@@ -118,13 +118,12 @@ class CollectionPoster(CollectionHandler):
         else:
             return validated_data
 
-    def handle_item(self, item: dict, schema_name: str):
+    def handle_item(self, item: dict):
         """
         Insert an item into the collection.
 
         Args:
             item (dict): The data item to insert.
-            schema_name (str): The schema name for validation.
 
         Returns:
             tuple: A Flask JSON response and HTTP status code.
@@ -192,14 +191,13 @@ class CollectionUpdater(CollectionHandler):
         else:
             return validated_data
 
-    def handle_item(self, item_id:str, data: dict, schema_name: str):
+    def handle_item(self, item_id:str, data: dict):
         """
         Update an item in the collection.
 
         Args:
             item_id (str): The ID of the item to update.
             data (dict): The new data for the item.
-            schema_name (str): The schema name for validation.
 
         Returns:
             tuple: A Flask JSON response and HTTP status code.

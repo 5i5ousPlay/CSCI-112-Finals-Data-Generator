@@ -11,15 +11,18 @@ class DataValidator:
         schema_directory (str): The directory path where JSON schema files are stored.
     """
     schema_directory = None
+    update = False
 
-    def __init__(self, schema_directory: str):
+    def __init__(self, schema_directory: str, update=False):
         """
         Initialize the DataValidator with the directory containing JSON schemas.
 
         Args:
             schema_directory (str): Path to the directory containing JSON schema files.
+            update(bool): Bool to ignore required fields during update operations
         """
         self.schema_directory = schema_directory
+        self.update = update
 
     def _load_schema(self, collection_name: str):
         """
@@ -53,6 +56,8 @@ class DataValidator:
             ValueError: If the data does not conform to the schema or if the schema file is invalid.
         """
         schema = self._load_schema(collection_name=collection_name)
+        if self.update:
+            schema.pop("required")
         try:
             validate(instance=data, schema=schema)
         except ValidationError as e:
