@@ -1,20 +1,17 @@
 {
   "type": "object",
-  "items": {
-    "type": "object",
-    "properties": {
-      "application_id": {"type": "string"},
-      "bank_name": {"type": "string"},
-      "account_type": {
-        "type": "string",
-        "enum": ["Savings", "In-Checking"]
-      },
-      "account_number": {"type": "number"},
-      "bank_status": {
-        "type": "string",
-        "enum": ["Active", "Inactive"]
-      }
+  "properties": {
+    "application_id": {"type": "string"},
+    "bank_name": {"type": "string"},
+    "account_type": {
+      "type": "string",
+      "enum": ["Savings", "In-Checking"]
     },
-    "required": ["application_id", "bank_name", "account_type", "account_number", "bank_status"]
-  }
+    "account_number": {"type": "number"},
+    "bank_status": {
+      "type": "string",
+      "enum": ["Active", "Inactive"]
+    }
+  },
+  "required": ["application_id", "bank_name", "account_type", "account_number", "bank_status"]
 }

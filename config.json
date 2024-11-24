@@ -1,7 +1,7 @@
 {
-  "hostname": "your_ec2_public_ipv4_address",
+  "hostname": "174.129.147.10",
   "port": 27017,
-  "database": "your_database_name",
+  "database": "finals",
   "n_applications": 50,
   "credit_transaction_size": 300
 }
